@@ -11,6 +11,7 @@ import Portfolio from "./pages/Portfolio";
 import Stocks from "./pages/Stocks";
 import Transactions from "./pages/Transactions";
 import Settings from "./pages/Settings";
+import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { DashboardLayout } from "./components/dashboard-layout";
 
@@ -30,6 +31,7 @@ const App = () => (
               <Route path="/stocks" element={<Stocks />} />
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/settings" element={<Settings />} />
+              <Route path="/profile" element={<Profile />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
