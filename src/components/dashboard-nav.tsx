@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -12,6 +11,7 @@ import {
   PieChart,
   Settings,
   User,
+  Recycle,
 } from "lucide-react";
 
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
@@ -40,6 +40,11 @@ export function DashboardNav({ className, ...props }: SidebarProps) {
       title: "Transactions",
       href: "/transactions",
       icon: <ChevronLeft className="h-5 w-5 rotate-90" />,
+    },
+    {
+      title: "EcoSnap",
+      href: "/ecosnap",
+      icon: <Recycle className="h-5 w-5" />,
     },
     {
       title: "Profile",

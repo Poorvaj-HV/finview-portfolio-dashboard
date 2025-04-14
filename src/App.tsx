@@ -14,6 +14,7 @@ import Settings from "./pages/Settings";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import { DashboardLayout } from "./components/dashboard-layout";
+import EcoSnapApp from "./pages/EcoSnap";
 
 const queryClient = new QueryClient();
 
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/transactions" element={<Transactions />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/ecosnap" element={<EcoSnapApp />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
