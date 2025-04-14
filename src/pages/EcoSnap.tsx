@@ -77,11 +77,11 @@ const EcoSnapApp = () => {
       
       setIsProcessing(false);
       
-      // Show success toast
+      // Show success toast - fixed variant to "default" instead of "success"
       toast({
         title: "Classification complete!",
         description: "We've identified your waste as Plastic",
-        variant: "success",
+        variant: "default",
       });
       
       // Update user points - in a real app this would be an API call
