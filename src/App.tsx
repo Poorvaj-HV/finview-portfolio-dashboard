@@ -9,8 +9,7 @@ import EcoSnapApp from "./pages/EcoSnap";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClient
-Provider client={queryClient}>
+  <QueryClientProvider client={queryClient}>
     <ThemeProvider defaultTheme="system">
       <TooltipProvider>
         <Toaster />
