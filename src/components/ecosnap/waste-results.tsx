@@ -18,19 +18,41 @@ interface EnvironmentalImpact {
   energySaved: number;
 }
 
-interface WasteResult {
+export interface WasteResult {
   wasteType: string;
   predictions: WastePrediction[];
   disposalTips: string[];
   environmentalImpact: EnvironmentalImpact;
 }
 
-interface WasteResultsProps {
-  result: WasteResult;
+export interface WasteResultsProps {
+  wasteType: string; // Simple string for basic implementation
 }
 
-export function WasteResults({ result }: WasteResultsProps) {
-  const isPrimaryRecyclable = result.predictions[0].recyclable;
+export function WasteResults({ wasteType }: WasteResultsProps) {
+  // Generate mock data based on wasteType
+  const mockResult: WasteResult = {
+    wasteType: wasteType,
+    predictions: [
+      { type: wasteType, confidence: 0.85, recyclable: wasteType === "Recyclable" },
+      { type: wasteType === "Recyclable" ? "Compostable" : "Recyclable", confidence: 0.12, recyclable: wasteType !== "Recyclable" },
+      { type: "Landfill", confidence: 0.03, recyclable: false }
+    ],
+    disposalTips: wasteType === "Recyclable" 
+      ? ["Clean and dry before recycling", "Remove labels if possible", "Check local recycling guidelines"] 
+      : wasteType === "Compostable"
+      ? ["Place in green bin or compost", "Break down large items", "Mix with carbon materials"]
+      : wasteType === "Hazardous"
+      ? ["Take to special disposal facility", "Do not mix with regular trash", "Store in original container"]
+      : ["Place in general waste bin", "Ensure properly sealed", "Reduce similar waste in future"],
+    environmentalImpact: {
+      co2Saved: wasteType === "Recyclable" ? 3.5 : wasteType === "Compostable" ? 2.1 : 0.0,
+      waterSaved: wasteType === "Recyclable" ? 500 : wasteType === "Compostable" ? 250 : 0,
+      energySaved: wasteType === "Recyclable" ? 7.2 : wasteType === "Compostable" ? 3.5 : 0.0
+    }
+  };
+  
+  const isPrimaryRecyclable = mockResult.predictions[0].recyclable;
   
   const handleSaveResult = () => {
     toast({
@@ -41,7 +63,7 @@ export function WasteResults({ result }: WasteResultsProps) {
   
   const handleShareResult = () => {
     navigator.clipboard.writeText(
-      `I just classified ${result.wasteType} waste with EcoSnap and saved ${result.environmentalImpact.co2Saved}kg of CO2!`
+      `I just classified ${mockResult.wasteType} waste with EcoSnap and saved ${mockResult.environmentalImpact.co2Saved}kg of CO2!`
     ).then(() => {
       toast({
         title: "Copied to clipboard!",
@@ -69,7 +91,7 @@ export function WasteResults({ result }: WasteResultsProps) {
           <div className="p-6 border-b">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h3 className="text-xl font-semibold">{result.wasteType}</h3>
+                <h3 className="text-xl font-semibold">{mockResult.wasteType}</h3>
                 <p className="text-sm text-muted-foreground">Primary waste classification</p>
               </div>
               <div className="h-14 w-14 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
@@ -79,7 +101,7 @@ export function WasteResults({ result }: WasteResultsProps) {
             
             <div className="space-y-3">
               <p className="text-sm font-medium">Classification Confidence:</p>
-              {result.predictions.map((prediction, index) => (
+              {mockResult.predictions.map((prediction, index) => (
                 <div key={index} className="space-y-1">
                   <div className="flex justify-between items-center text-sm">
                     <span>{prediction.type}</span>
@@ -102,7 +124,7 @@ export function WasteResults({ result }: WasteResultsProps) {
               </div>
               
               <ul className="space-y-2">
-                {result.disposalTips.map((tip, index) => (
+                {mockResult.disposalTips.map((tip, index) => (
                   <li key={index} className="flex items-start gap-2 text-sm">
                     <span className="h-5 w-5 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-800 dark:text-green-200 flex-shrink-0">
                       {index + 1}
@@ -122,19 +144,19 @@ export function WasteResults({ result }: WasteResultsProps) {
               <div className="grid grid-cols-3 gap-2 text-center">
                 <div className="bg-green-50 dark:bg-green-900/20 p-3 rounded-lg">
                   <p className="text-lg font-semibold text-green-700 dark:text-green-500">
-                    {result.environmentalImpact.co2Saved} kg
+                    {mockResult.environmentalImpact.co2Saved} kg
                   </p>
                   <p className="text-xs text-muted-foreground">CO₂ Saved</p>
                 </div>
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-3 rounded-lg">
                   <p className="text-lg font-semibold text-blue-700 dark:text-blue-500">
-                    {result.environmentalImpact.waterSaved} L
+                    {mockResult.environmentalImpact.waterSaved} L
                   </p>
                   <p className="text-xs text-muted-foreground">Water Saved</p>
                 </div>
                 <div className="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg">
                   <p className="text-lg font-semibold text-amber-700 dark:text-amber-500">
-                    {result.environmentalImpact.energySaved} kWh
+                    {mockResult.environmentalImpact.energySaved} kWh
                   </p>
                   <p className="text-xs text-muted-foreground">Energy Saved</p>
                 </div>
