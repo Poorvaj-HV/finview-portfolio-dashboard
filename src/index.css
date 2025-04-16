@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
@@ -57,6 +58,7 @@
     --eco-primary-foreground: 0 0% 98%;
     --eco-accent: 142 71% 60%;
     --eco-accent-foreground: 0 0% 98%;
+    --eco-border: 142 40% 90%;
   }
 
   .dark {
@@ -109,6 +111,7 @@
     --eco-primary-foreground: 0 0% 10%;
     --eco-accent: 142 71% 45%;
     --eco-accent-foreground: 0 0% 98%;
+    --eco-border: 142 40% 20%;
   }
 }
 
@@ -134,18 +137,18 @@
   .glassmorphism {
     @apply bg-background/80 backdrop-blur-sm border border-border/50;
   }
+
+  .eco-shadow {
+    @apply shadow-md hover:shadow-lg transition-shadow duration-200;
+  }
+
+  .eco-border {
+    @apply border border-eco-border;
+  }
 }
 
 @layer utilities {
   .eco-gradient {
     @apply bg-gradient-to-br from-eco-100 to-eco-300 dark:from-eco-900/30 dark:to-eco-800/30;
-  }
-
-  .eco-shadow {
-    @apply shadow-md hover:shadow-lg transition-shadow duration-300;
-  }
-
-  .eco-border {
-    @apply border border-eco-200 dark:border-eco-900/50;
   }
 }

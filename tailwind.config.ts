@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -84,6 +85,13 @@ export default {
           700: '#15803d',
           800: '#166534',
           900: '#14532d',
+          background: 'hsl(var(--eco-background))',
+          foreground: 'hsl(var(--eco-foreground))',
+          primary: 'hsl(var(--eco-primary))',
+          'primary-foreground': 'hsl(var(--eco-primary-foreground))',
+          accent: 'hsl(var(--eco-accent))',
+          'accent-foreground': 'hsl(var(--eco-accent-foreground))',
+          border: 'hsl(var(--eco-border))'
         },
         green: {
           DEFAULT: '#22c55e',
@@ -124,6 +132,10 @@ export default {
           from: { transform: 'scale(1)', opacity: '1' },
           to: { transform: 'scale(0.95)', opacity: '0' }
         },
+        'bounce-light': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-5px)' }
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
@@ -133,6 +145,7 @@ export default {
         'pulse': 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'scale-in': 'scale-in 0.2s ease-out',
         'scale-out': 'scale-out 0.2s ease-out',
+        'bounce-light': 'bounce-light 2s ease-in-out infinite',
       },
       backgroundImage: {
         'eco-gradient-1': 'linear-gradient(135deg, #f2fcf2 0%, #d1e8d1 100%)',
