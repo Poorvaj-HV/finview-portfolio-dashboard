@@ -1,10 +1,11 @@
 
-import { BarChart, Info, Leaf, Recycle } from 'lucide-react';
+import { AlertTriangle, BarChart, Info, Leaf, Recycle, RotateCcw } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface WastePrediction {
   type: string;
@@ -26,10 +27,61 @@ export interface WasteResult {
 }
 
 export interface WasteResultsProps {
-  wasteType: string; // Simple string for basic implementation
+  wasteType: string;
+  error?: string | null;
+  onRetry?: () => void;
 }
 
-export function WasteResults({ wasteType }: WasteResultsProps) {
+export function WasteResults({ wasteType, error, onRetry }: WasteResultsProps) {
+  // If there's an error, display an error message with retry option
+  if (error) {
+    return (
+      <div className="space-y-6 animate-fade-in">
+        <Card className="border-red-100 dark:border-red-900/50 shadow-md overflow-hidden">
+          <CardHeader className="bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/30 dark:to-red-800/30 border-b">
+            <div className="flex justify-between items-center">
+              <div>
+                <CardTitle className="text-red-700 dark:text-red-300 flex items-center">
+                  <AlertTriangle className="h-5 w-5 mr-2" />
+                  Analysis Error
+                </CardTitle>
+                <CardDescription>Unable to classify waste image</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          
+          <CardContent className="p-6">
+            <Alert variant="destructive" className="mb-4">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Classification Failed</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+            
+            <div className="text-sm text-muted-foreground mb-6">
+              <p>This could be due to:</p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Image quality issues or poor lighting</li>
+                <li>Unrecognizable waste type</li>
+                <li>Technical problem with the AI service</li>
+              </ul>
+            </div>
+            
+            {onRetry && (
+              <Button 
+                onClick={onRetry} 
+                className="w-full"
+                variant="outline"
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Try Again
+              </Button>
+            )}
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   // Generate mock data based on wasteType
   const mockResult: WasteResult = {
     wasteType: wasteType,
@@ -69,6 +121,13 @@ export function WasteResults({ wasteType }: WasteResultsProps) {
         title: "Copied to clipboard!",
         description: "Now you can share this result with others",
       });
+    }).catch((clipboardError) => {
+      toast({
+        title: "Failed to copy",
+        description: "Could not access clipboard",
+        variant: "destructive",
+      });
+      console.error("Clipboard error:", clipboardError);
     });
   };
   

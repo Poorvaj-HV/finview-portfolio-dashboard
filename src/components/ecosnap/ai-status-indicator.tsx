@@ -1,11 +1,23 @@
 
-import { Loader2 } from 'lucide-react';
+import { AlertTriangle, Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 
 interface AIStatusIndicatorProps {
   analyzing: boolean;
+  error?: string | null;
 }
 
-export function AIStatusIndicator({ analyzing }: AIStatusIndicatorProps) {
+export function AIStatusIndicator({ analyzing, error }: AIStatusIndicatorProps) {
+  if (error) {
+    return (
+      <Alert variant="destructive" className="animate-fade-in my-4">
+        <AlertTriangle className="h-4 w-4" />
+        <AlertTitle>Analysis Failed</AlertTitle>
+        <AlertDescription>{error}</AlertDescription>
+      </Alert>
+    );
+  }
+  
   if (!analyzing) return null;
   
   return (

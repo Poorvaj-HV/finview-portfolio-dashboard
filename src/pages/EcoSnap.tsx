@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,22 +10,37 @@ import { CommunityLeaderboard } from "@/components/ecosnap/community-leaderboard
 import { UserRewards } from "@/components/ecosnap/user-rewards";
 import { SustainabilityTips } from "@/components/ecosnap/sustainability-tips";
 import { EcoChatAssistant } from "@/components/ecosnap/eco-chat-assistant";
-import { Camera, Upload, Trophy, Leaf, MessageCircle, HelpCircle } from "lucide-react";
+import { AlertTriangle, Camera, Upload, Trophy, Leaf, MessageCircle, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const EcoSnapApp = () => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [wasteType, setWasteType] = useState<string | null>(null);
+  const [analysisError, setAnalysisError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const handleImageSelect = (imageUrl: string) => {
     setSelectedImage(imageUrl);
     setWasteType(null);
+    setAnalysisError(null);
     
     // Simulate AI analysis
     setAnalyzing(true);
     setTimeout(() => {
+      // Simulate occasional errors (10% chance of error)
+      if (Math.random() < 0.1) {
+        setAnalysisError("Our AI model couldn't recognize this item. Try a clearer image or a different angle.");
+        setAnalyzing(false);
+        
+        toast({
+          title: "Analysis Failed",
+          description: "Unable to classify the image. Please try again.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       const wasteTypes = ["Recyclable", "Compostable", "Hazardous", "Landfill"];
       const randomType = wasteTypes[Math.floor(Math.random() * wasteTypes.length)];
       setWasteType(randomType);
@@ -38,6 +52,13 @@ const EcoSnapApp = () => {
         duration: 3000,
       });
     }, 2500);
+  };
+
+  const handleRetry = () => {
+    if (selectedImage) {
+      setAnalysisError(null);
+      handleImageSelect(selectedImage);
+    }
   };
 
   return (
@@ -104,19 +125,42 @@ const EcoSnapApp = () => {
               <Card className="eco-border eco-shadow animate-fade-in">
                 <CardHeader>
                   <CardTitle className="flex items-center">
-                    <Leaf className="mr-2 h-5 w-5 text-eco-primary" />
-                    Analysis Results
+                    {analysisError ? (
+                      <>
+                        <AlertTriangle className="mr-2 h-5 w-5 text-destructive" />
+                        Analysis Error
+                      </>
+                    ) : (
+                      <>
+                        <Leaf className="mr-2 h-5 w-5 text-eco-primary" />
+                        Analysis Results
+                      </>
+                    )}
                   </CardTitle>
                   <CardDescription>
-                    AI-powered waste classification and guidance
+                    {analysisError 
+                      ? "We encountered a problem analyzing your image"
+                      : "AI-powered waste classification and guidance"
+                    }
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <AIStatusIndicator analyzing={analyzing} />
+                    <AIStatusIndicator 
+                      analyzing={analyzing} 
+                      error={analysisError} 
+                    />
                     
-                    {wasteType && !analyzing && (
+                    {wasteType && !analyzing && !analysisError && (
                       <WasteResults wasteType={wasteType} />
+                    )}
+                    
+                    {analysisError && !analyzing && (
+                      <WasteResults 
+                        wasteType="" 
+                        error={analysisError}
+                        onRetry={handleRetry}
+                      />
                     )}
                   </div>
                 </CardContent>
